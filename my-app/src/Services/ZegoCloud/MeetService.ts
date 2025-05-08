@@ -1,8 +1,8 @@
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 
 class VideoCallService{
-    private readonly appId:number = 242868284;
-    private readonly serverSecret:string = '3c863969534e88145f567295f5aa2a3b'; 
+    private readonly appId:number = ;
+    private readonly serverSecret:string = ; 
 
 
     generateZegoUIKit(meetCode:string):ZegoUIKitPrebuilt{
