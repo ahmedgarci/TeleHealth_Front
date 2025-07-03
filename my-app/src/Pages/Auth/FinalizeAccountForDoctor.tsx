@@ -3,12 +3,15 @@ import MapComponent from "../../Components/Map/Map";
 import AuthService from "../../Services/Auth/AuthService";
 import { Avatar, Box, Button, IconButton, Paper, TextField, Typography } from "@mui/material";
 import { LatLng } from "leaflet";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DoctorFinalizeAccountPage = () => {
   const [photo, setPhoto] = useState<File | null>(null);
   const [place, setPlace] = useState<LatLng | null>(null);
   const [description, setDescription] = useState<string>("");
-  const [errors, setErrors] = useState<[] | null>(null);
+  const [errors, setErrors] = useState<string[] | null>(null);
+  const navigate = useNavigate();
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -20,7 +23,7 @@ const DoctorFinalizeAccountPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!photo || !place) {
-      return;
+      setErrors(["Please upload a photo and select a location."]);
     }
     const formData = new FormData();
     formData.append("file", photo);
@@ -33,9 +36,10 @@ const DoctorFinalizeAccountPage = () => {
     );
 
     try {
-      await AuthService.finalizeAccount(formData);
+      const response = await axios.post("http://localhost:8080/api/v1/auth/finalize",formData,{headers:{Authorization:`Bearer ${localStorage.getItem("token")}`}});
+      navigate("/appointments")
     } catch (error: any) {
-      setErrors(error);
+      console.log(error);
     }
   };
 

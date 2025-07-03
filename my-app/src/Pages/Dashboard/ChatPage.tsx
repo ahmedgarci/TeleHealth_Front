@@ -33,6 +33,7 @@ const ChatPage = () => {
   const handleSendMessage = () => {
     PublishMessage(message);
     setMessage(prev => ({ ...prev, content: "" }));
+    
   };
 
   return (
@@ -56,7 +57,7 @@ const ChatPage = () => {
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {message.chatId ? (
           <>
-            <ChatHeader /> 
+            <ChatHeader  /> 
             <Divider />
             <Box sx={{ flex: 1, overflowY: 'auto' }}>
               <DisplayChatMessages ChatId={message.chatId} />

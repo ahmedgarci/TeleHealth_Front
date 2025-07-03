@@ -2,25 +2,26 @@ import { Client } from '@stomp/stompjs';
 import { MessageRequest } from '../Requests/MessageRequest';
 import toast from 'react-hot-toast';
 import { Notification } from './Notification';
-import { MessagesContext } from '../../Hooks/useMessagesContext';
+import React from 'react';
+import { Message } from '../Responses/Message';
 
 let stompClient: Client | null = null;
 
-export default function HandleWebSocketConnection(user_id:string) {
+export default function HandleWebSocketConnection(user_id:string,setMessages:React.Dispatch<React.SetStateAction<Message[] | null >>) {
   stompClient = new Client({
     brokerURL: "ws://localhost:8080/api/v1/ws",
     connectHeaders: {
-      Authorization: localStorage.getItem("token") || "",
+      Authorization: localStorage.getItem("token") as string,
     },
     onConnect: () => {
-      console.log("connected");
       stompClient?.subscribe(`/user/${user_id}/notification`,(message:any)=>{
         const notification:Notification = JSON.parse(message.body) 
-        notification.isAccepted ? toast.success(`${notification.message}`) : toast.error(`${notification.message}`)
+        console.log(notification);
+        notification?.accepted ? toast.success(`${notification.message}`) : toast.error(`${notification.message}`)
       }),
        stompClient?.subscribe(`/user/${user_id}/messages`,(message:any)=>{
         console.log(message);
-//        MessagesContext?.setMessages(prev=> [...prev || [],message ])
+        setMessages((prev) => [...prev||[],message])
       })
     },
 

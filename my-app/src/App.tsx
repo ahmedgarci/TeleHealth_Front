@@ -7,7 +7,7 @@ import DoctorProfilePage from "./Pages/Auth/FinalizeAccountForDoctor";
 import ProfilePage from "./Pages/Dashboard/ProfilePage";
 import DoctorProfile from "./Pages/Public/DoctorPage";
 import AppointmentDemands from "./Pages/Dashboard/DemandsPage";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import HandleWebSocketConnection from "./Services/Websocket/WebsocketService";
 import AppointmentsPage from "./Pages/Dashboard/AppointmentsPage";
 import ChatPage from "./Pages/Dashboard/ChatPage";
@@ -16,13 +16,15 @@ import DoctorsPage from "./Pages/Public/AllDoctorsPage";
 import { Toaster } from 'react-hot-toast'; 
 import { MessagesProvider } from "./Hooks/useMessagesContext";
 import VideCallPage from "./Pages/Dashboard/MeetPage";
+import { useMessagesContext } from "./Hooks/UseMessagesHOC";
 
 
 function App() {
   const user_id:string|null = localStorage.getItem("id")
+  const context = useMessagesContext()
   useEffect(()=>{
     if(!user_id){return;}
-    HandleWebSocketConnection(user_id)
+    HandleWebSocketConnection(user_id,context.setMessages)
   },[user_id])
   return (
     <MessagesProvider>
@@ -34,7 +36,6 @@ function App() {
           <Route path="demands" element={<AppointmentDemands/>} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="messages" element={<ChatPage/>} />
-          <Route path="notifications" element={<div>Notifications Page</div>} />
         </Route>
         <Route path="/home" element={<HomePage/>} />
         <Route path="/auth" element={<Auth />} />

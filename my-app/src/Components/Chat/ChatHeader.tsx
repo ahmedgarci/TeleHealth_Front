@@ -4,6 +4,7 @@ export default function ChatHeader(){
     return(
         <Paper elevation={1} sx={{ p: 2 }}>
           <Typography variant="h6">Messages</Typography>
+          
         </Paper>
     )
 }

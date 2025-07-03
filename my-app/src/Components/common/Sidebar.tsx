@@ -82,6 +82,24 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
+  const menuItems = [
+    { text: 'Appointments', icon: <CalendarTodayIcon />, path: '/appointments', roles: ['ROLE_DOCTOR', 'ROLE_PATIENT'] },
+    { text: 'Messages', icon: <MailIcon />, path: '/messages', roles: ['ROLE_DOCTOR', 'ROLE_PATIENT'] },
+    { text: 'Demands', icon: <AssignmentIcon />, path: '/demands', roles: ['ROLE_DOCTOR'] },
+    { text: 'Profile', icon: <AccountCircleIcon />, path: '/profile', roles: ['ROLE_DOCTOR'] },
+    { text: 'Logout', icon: <LogoutIcon />, path: '', roles: ['ROLE_DOCTOR', 'ROLE_PATIENT'], action: 'logout' },
+  ];
+
+
+  const handleLogout = async () => {
+    try {
+      await AuthService.Logout();
+      window.location.href = '/auth';
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -95,42 +113,35 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {[
-    { text: 'Appointments', icon: <CalendarTodayIcon />, path:"/appointments",roles:["ROLE_DOCTOR","ROLE_PATIENT"]  },
-    { text: 'Messages', icon: <MailIcon /> ,path:"/messages",roles:["ROLE_DOCTOR","ROLE_PATIENT"]},
-    { text: 'Demands', icon: <AssignmentIcon />, path:"/demands" ,roles:["ROLE_DOCTOR"] },
-    { text: 'Profile', icon: <AccountCircleIcon />, path:"/profile" , roles:["ROLE_DOCTOR"] },
-    {text:"Logout",icon:<LogoutIcon/>, roles:["ROLE_DOCTOR","ROLE_PATIENT"]  }
-  ].
-  filter(item=> item.roles?.includes(localStorage.getItem("role") as string))
-  .map((item, index) => (
-    <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-      {item.text === "Logout" ? (
-        <ListItemButton
-          onClick={async () => await AuthService.Logout()}
-          sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
-        >
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-            {item.icon}
-          </ListItemIcon>
-          <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
-        </ListItemButton>
-      ) : (
-        <NavLink to={item.path!} style={{ textDecoration: "none", color: "inherit" }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}>
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </NavLink>
-      )}
-    </ListItem>
-  ))}
+          {menuItems
+            .filter(item => item.roles?.includes(localStorage.getItem("role") as string)) // Filtrer les éléments en fonction du rôle
+            .map((item, index) => (
+              <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+                {item.action === 'logout' ? (
+                  <ListItemButton
+                    onClick={handleLogout}
+                    sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                ) : (
+                  <NavLink to={item.path!} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}>
+                      <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                    </ListItemButton>
+                  </NavLink>
+                )}
+              </ListItem>
+            ))}
         </List>
-
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Outlet />
       </Box>

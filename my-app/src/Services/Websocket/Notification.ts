@@ -1,4 +1,4 @@
 export interface Notification{
     message:string,
-    isAccepted:boolean,
+    accepted:boolean,
 }

@@ -15,13 +15,15 @@ export default function useWebsocketConnectionInit(user_id: string) {
     const stompClient = new Client({
       brokerURL: "ws://localhost:8080/api/v1/ws",
       connectHeaders: {
-        Authorization: localStorage.getItem("token") || "",
+        Authorization: localStorage.getItem("token") as string,
       },
       onConnect: () => {
         console.log("connected");
         stompClient.subscribe(`/user/${user_id}/notification`, (message: any) => {
+          console.log('aaaaaaaaaaaaaaa');
+          console.log(message);
           const notification: Notification = JSON.parse(message.body);
-          notification.isAccepted
+          notification.accepted
             ? toast.success(notification.message)
             : toast.error(notification.message);
         });

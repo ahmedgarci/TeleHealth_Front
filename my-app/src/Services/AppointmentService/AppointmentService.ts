@@ -23,9 +23,17 @@ class AppointmentService{
 
     async createDemandForAppointment(req:DemandAppointmentRequest):Promise<void>{
         try {
-            await privateAxios.post("/appointments/demand",req)   
+            await privateAxios.post("/appointments/demand",req)  
         } catch (error:any) {
             throw error.response.data
+        }
+    }
+
+    async markAsCompleted(appointmentId:number):Promise<void>{
+        try{
+            await privateAxios.post(`/appointments/completed/${appointmentId}`);
+        }catch(error:any){
+            console.log(error);
         }
     }
 

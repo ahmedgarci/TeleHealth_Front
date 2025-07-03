@@ -8,11 +8,9 @@ type MessagesContextType = {
 
 export const MessagesContext = createContext<MessagesContextType | null>(null);
 
-interface MessagesProviderProps {
-  children: ReactNode;
-}
 
-export const MessagesProvider = ({ children }: MessagesProviderProps) => {
+
+export const MessagesProvider = ({ children }: {children:ReactNode}) => {
   const [messages, setMessages] = useState<Message[] | null>(null);
 
   return (
